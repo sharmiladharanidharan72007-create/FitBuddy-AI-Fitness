@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        FitBuddy - Your Plan
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+<main class="container wide">
+
+
+<header class="topbar">
+
+
+<a
+    class="brand"
+    href="/"
+>
+
+    💪 FitBuddy
+
+</a>
+
+
+<a href="/view-all-users">
+
+    Admin Dashboard
+
+</a>
+
+
+</header>
+
+
+{% if message %}
+
+<div class="alert success">
+
+    {{ message }}
+
+</div>
+
+{% endif %}
+
+
+<section class="card">
+
+
+<h1>
+    Your Personalized Plan
+</h1>
+
+
+<div class="profile grid two">
+
+
+<div>
+
+<strong>
+    Name:
+</strong>
+
+{{ user.username }}
+
+</div>
+
+
+<div>
+
+<strong>
+    User ID:
+</strong>
+
+{{ user.user_id }}
+
+</div>
+
+
+<div>
+
+<strong>
+    Age:
+</strong>
+
+{{ user.age }}
+
+</div>
+
+
+<div>
+
+<strong>
+    Weight:
+</strong>
+
+{{ user.weight }} kg
+
+</div>
+
+
+<div>
+
+<strong>
+    Goal:
+</strong>
+
+{{ user.goal }}
+
+</div>
+
+
+<div>
+
+<strong>
+    Intensity:
+</strong>
+
+{{ user.intensity }}
+
+</div>
+
+
+</div>
+
+
+</section>
+
+
+<section class="card">
+
+
+<h2>
+    🏋️ 7-Day Workout Plan
+</h2>
+
+
+<pre class="plan">
+
+{{ workout_plan }}
+
+</pre>
+
+
+</section>
+
+
+<section class="card tip">
+
+
+<h2>
+    🥗 Nutrition / Recovery Tip
+</h2>
+
+
+<p>
+
+{{ nutrition_tip }}
+
+</p>
+
+
+</section>
+
+
+<section class="card">
+
+
+<h2>
+    🔄 Improve Your Plan
+</h2>
+
+
+<p class="muted">
+
+Tell FitBuddy what you want changed.
+
+For example:
+
+"Add more cardio"
+
+or
+
+"Include more rest days."
+
+</p>
+
+
+<form
+    action="/submit-feedback"
+    method="post"
+>
+
+
+<input
+    type="hidden"
+    name="user_id"
+    value="{{ user.user_id }}"
+>
+
+
+<textarea
+    name="feedback"
+    rows="5"
+    maxlength="2000"
+    placeholder="Enter your feedback..."
+    required
+></textarea>
+
+
+<button
+    class="primary"
+    type="submit"
+>
+
+    Update Plan with AI
+
+</button>
+
+
+</form>
+
+
+</section>
+
+
+<div class="center">
+
+
+<a
+    class="secondary"
+    href="/"
+>
+
+    Create Another Plan
+
+</a>
+
+
+</div>
+
+
+</main>
+
+
+</body>
+
+</html>

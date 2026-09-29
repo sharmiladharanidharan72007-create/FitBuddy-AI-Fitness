@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        FitBuddy - Admin Dashboard
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='style.css') }}"
+    >
+
+</head>
+
+
+<body>
+
+
+<main class="container wide">
+
+
+<header class="topbar">
+
+
+<a
+    class="brand"
+    href="/"
+>
+
+    💪 FitBuddy
+
+</a>
+
+
+<a href="/">
+
+    New Plan
+
+</a>
+
+
+</header>
+
+
+<section class="card">
+
+
+<h1>
+    👥 All Users
+</h1>
+
+
+<p class="muted">
+
+Stored users and their
+workout plans.
+
+</p>
+
+
+{% if not users %}
+
+<div class="empty">
+
+    No users have been
+    registered yet.
+
+</div>
+
+{% endif %}
+
+
+{% for user in users %}
+
+
+<article class="user-card">
+
+
+<div class="user-heading">
+
+
+<div>
+
+
+<h2>
+
+{{ user.username }}
+
+</h2>
+
+
+<span class="badge">
+
+{{ user.user_id }}
+
+</span>
+
+
+</div>
+
+
+<div class="small">
+
+{{ user.created_at }}
+
+</div>
+
+
+</div>
+
+
+<div class="profile grid two">
+
+
+<div>
+
+<strong>
+Age:
+</strong>
+
+{{ user.age }}
+
+</div>
+
+
+<div>
+
+<strong>
+Weight:
+</strong>
+
+{{ user.weight }} kg
+
+</div>
+
+
+<div>
+
+<strong>
+Goal:
+</strong>
+
+{{ user.goal }}
+
+</div>
+
+
+<div>
+
+<strong>
+Intensity:
+</strong>
+
+{{ user.intensity }}
+
+</div>
+
+
+</div>
+
+
+{% for plan in user.plans %}
+
+
+<details>
+
+
+<summary>
+
+View Plan #{{ plan.id }}
+
+</summary>
+
+
+<h3>
+Original Plan
+</h3>
+
+
+<pre class="plan">
+
+{{ plan.original_plan }}
+
+</pre>
+
+
+<h3>
+Current / Updated Plan
+</h3>
+
+
+<pre class="plan">
+
+{{ plan.current_plan }}
+
+</pre>
+
+
+<h3>
+Nutrition Tip
+</h3>
+
+
+<p>
+
+{{ plan.nutrition_tip }}
+
+</p>
+
+
+{% if plan.feedback %}
+
+
+<h3>
+Latest Feedback
+</h3>
+
+
+<p>
+
+{{ plan.feedback }}
+
+</p>
+
+
+{% endif %}
+
+
+</details>
+
+
+{% endfor %}
+
+
+</article>
+
+
+{% endfor %}
+
+
+</section>
+
+
+</main>
+
+
+</body>
+
+</html>
