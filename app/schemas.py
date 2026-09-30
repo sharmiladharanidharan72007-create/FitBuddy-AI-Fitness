@@ -1,3 +1,4 @@
+
 from typing import Literal
 
 from pydantic import BaseModel, Field, field_validator
@@ -44,6 +45,26 @@ class UserInput(BaseModel):
 
     intensity: Intensity
 
+    morning_nutrition: str = Field(
+        default="Not provided",
+        max_length=200
+    )
+
+    afternoon_nutrition: str = Field(
+        default="Not provided",
+        max_length=200
+    )
+
+    evening_nutrition: str = Field(
+        default="Not provided",
+        max_length=200
+    )
+
+    health_problem: str = Field(
+        default="No problem reported",
+        max_length=300
+    )
+
 
     @field_validator(
         "username",
@@ -55,10 +76,26 @@ class UserInput(BaseModel):
         value = value.strip()
 
         if not value:
-
             raise ValueError(
                 "Value cannot be empty"
             )
+
+        return value
+
+
+    @field_validator(
+        "morning_nutrition",
+        "afternoon_nutrition",
+        "evening_nutrition",
+        "health_problem"
+    )
+    @classmethod
+    def clean_optional_text(cls, value):
+
+        value = value.strip()
+
+        if not value:
+            return "Not provided"
 
         return value
 

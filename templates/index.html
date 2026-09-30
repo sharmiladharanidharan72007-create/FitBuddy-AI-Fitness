@@ -1,244 +1,268 @@
+
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>
-        FitBuddy - AI Fitness Assistant
-    </title>
+    <title>FitBuddy - AI Fitness Assistant</title>
 
     <link
         rel="stylesheet"
         href="{{ url_for('static', path='style.css') }}"
     >
-
 </head>
-
 
 <body class="hero-page">
 
-
 <main class="container">
-
 
 <section class="card form-card">
 
+    <div class="brand">
+        💪 FitBuddy
+    </div>
 
-<div class="brand">
-    💪 FitBuddy
-</div>
+    <p class="tagline">
+        AI-powered personalized fitness planning
+    </p>
 
+    <h1>
+        Create Your 7-Day Plan
+    </h1>
 
-<p class="tagline">
-    AI-powered personalized fitness planning
-</p>
-
-
-<h1>
-    Create Your 7-Day Plan
-</h1>
-
-
-<p class="muted">
-
-    Enter your details and let FitBuddy
-    prepare a personalized workout plan
-    and nutrition tip.
-
-</p>
+    <p class="muted">
+        Enter your details and let FitBuddy
+        prepare a personalized workout plan
+        and nutrition tip.
+    </p>
 
 
-{% if error %}
-
-<div class="alert error">
-
-    {{ error }}
-
-</div>
-
-{% endif %}
+    {% if error %}
+    <div class="alert error">
+        {{ error }}
+    </div>
+    {% endif %}
 
 
-<form
-    action="/generate-workout"
-    method="post"
->
+    <form action="/generate-workout" method="post">
+
+        <!-- BASIC USER DETAILS -->
+
+        <div class="grid two">
+
+            <label>
+                Name
+
+                <input
+                    type="text"
+                    name="username"
+                    placeholder="Your name"
+                    required
+                    maxlength="100"
+                >
+            </label>
 
 
-<div class="grid two">
+            <label>
+                User ID
+
+                <input
+                    type="text"
+                    name="user_id"
+                    placeholder="Example: FB001"
+                    required
+                    maxlength="80"
+                >
+            </label>
 
 
-<label>
+            <label>
+                Age
 
-    Name
-
-    <input
-        type="text"
-        name="username"
-        placeholder="Your name"
-        required
-        maxlength="100"
-    >
-
-</label>
+                <input
+                    type="number"
+                    name="age"
+                    min="13"
+                    max="100"
+                    required
+                >
+            </label>
 
 
-<label>
+            <label>
+                Weight (kg)
 
-    User ID
-
-    <input
-        type="text"
-        name="user_id"
-        placeholder="Example: FB001"
-        required
-        maxlength="80"
-    >
-
-</label>
-
-
-<label>
-
-    Age
-
-    <input
-        type="number"
-        name="age"
-        min="13"
-        max="100"
-        required
-    >
-
-</label>
+                <input
+                    type="number"
+                    name="weight"
+                    min="20"
+                    max="400"
+                    step="0.1"
+                    required
+                >
+            </label>
 
 
-<label>
+            <label>
+                Fitness Goal
 
-    Weight (kg)
+                <select name="goal" required>
 
-    <input
-        type="number"
-        name="weight"
-        min="20"
-        max="400"
-        step="0.1"
-        required
-    >
+                    <option value="weight loss">
+                        Weight Loss
+                    </option>
 
-</label>
+                    <option value="muscle gain">
+                        Muscle Gain
+                    </option>
 
+                    <option value="general wellness">
+                        General Wellness
+                    </option>
 
-<label>
+                    <option value="flexibility">
+                        Flexibility
+                    </option>
 
-    Fitness Goal
-
-    <select
-        name="goal"
-        required
-    >
-
-        <option value="weight loss">
-            Weight Loss
-        </option>
-
-        <option value="muscle gain">
-            Muscle Gain
-        </option>
-
-        <option value="general wellness">
-            General Wellness
-        </option>
-
-        <option value="flexibility">
-            Flexibility
-        </option>
-
-    </select>
-
-</label>
+                </select>
+            </label>
 
 
-<label>
+            <label>
+                Workout Intensity
 
-    Workout Intensity
+                <select name="intensity" required>
 
-    <select
-        name="intensity"
-        required
-    >
+                    <option value="low">
+                        Low
+                    </option>
 
-        <option value="low">
-            Low
-        </option>
+                    <option value="medium" selected>
+                        Medium
+                    </option>
 
-        <option
-            value="medium"
-            selected
+                    <option value="high">
+                        High
+                    </option>
+
+                </select>
+            </label>
+
+        </div>
+
+
+        <!-- NUTRITION DETAILS -->
+
+        <h2 class="form-section-title">
+            🥗 Nutrition Details
+        </h2>
+
+        <p class="muted">
+            Enter a short description of what you usually eat.
+        </p>
+
+
+        <div class="grid two">
+
+            <label>
+                🌅 Morning Nutrition
+
+                <input
+                    type="text"
+                    name="morning_nutrition"
+                    placeholder="Example: Idli + egg"
+                    maxlength="200"
+                >
+            </label>
+
+
+            <label>
+                ☀️ Afternoon Nutrition
+
+                <input
+                    type="text"
+                    name="afternoon_nutrition"
+                    placeholder="Example: Rice + vegetables"
+                    maxlength="200"
+                >
+            </label>
+
+
+            <label>
+                🌙 Evening Nutrition
+
+                <input
+                    type="text"
+                    name="evening_nutrition"
+                    placeholder="Example: Chapati + vegetables"
+                    maxlength="200"
+                >
+            </label>
+
+        </div>
+
+
+        <!-- BODY PROBLEM -->
+
+        <h2 class="form-section-title">
+            ❤️ Health Information
+        </h2>
+
+        <label>
+            Any disease or problem in your body?
+
+            <input
+                type="text"
+                name="health_problem"
+                placeholder="Example: No problem / Knee pain"
+                maxlength="300"
+            >
+        </label>
+
+        <p class="small-note">
+            Optional. This information is used only to make the
+            generated plan more appropriate. FitBuddy does not
+            diagnose or treat medical conditions.
+        </p>
+
+
+        <!-- SUBMIT -->
+
+        <button
+            class="primary"
+            type="submit"
         >
-            Medium
-        </option>
+            ✨ Generate My Plan
+        </button>
 
-        <option value="high">
-            High
-        </option>
-
-    </select>
-
-</label>
+    </form>
 
 
-</div>
+    <!-- LINKS -->
+
+    <div class="links">
+
+        <a href="/view-all-users">
+            Admin Dashboard
+        </a>
+
+        <a href="/docs">
+            API Docs
+        </a>
+
+    </div>
 
 
-<button
-    class="primary"
-    type="submit"
->
-
-    ✨ Generate My Plan
-
-</button>
-
-
-</form>
-
-
-<div class="links">
-
-    <a href="/view-all-users">
-        Admin Dashboard
-    </a>
-
-    <a href="/docs">
-        API Docs
-    </a>
-
-</div>
-
-
-<p class="disclaimer">
-
-    FitBuddy provides general wellness
-    guidance and is not medical advice.
-
-</p>
-
+    <p class="disclaimer">
+        FitBuddy provides general wellness
+        guidance and is not medical advice.
+    </p>
 
 </section>
 
-
 </main>
 
-
 </body>
-
 </html>
+

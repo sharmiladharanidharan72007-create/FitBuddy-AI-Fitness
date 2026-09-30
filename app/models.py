@@ -1,3 +1,4 @@
+
 from datetime import datetime
 
 from sqlalchemy import (
@@ -22,11 +23,13 @@ class User(Base):
 
     __tablename__ = "users"
 
+
     id: Mapped[int] = mapped_column(
         Integer,
         primary_key=True,
         index=True
     )
+
 
     user_id: Mapped[str] = mapped_column(
         String(80),
@@ -35,30 +38,64 @@ class User(Base):
         nullable=False
     )
 
+
     username: Mapped[str] = mapped_column(
         String(100),
         nullable=False
     )
+
 
     age: Mapped[int] = mapped_column(
         Integer,
         nullable=False
     )
 
+
     weight: Mapped[float] = mapped_column(
         Float,
         nullable=False
     )
+
 
     goal: Mapped[str] = mapped_column(
         String(50),
         nullable=False
     )
 
+
     intensity: Mapped[str] = mapped_column(
         String(20),
         nullable=False
     )
+
+
+    morning_nutrition: Mapped[str] = mapped_column(
+        String(200),
+        default="Not provided",
+        nullable=False
+    )
+
+
+    afternoon_nutrition: Mapped[str] = mapped_column(
+        String(200),
+        default="Not provided",
+        nullable=False
+    )
+
+
+    evening_nutrition: Mapped[str] = mapped_column(
+        String(200),
+        default="Not provided",
+        nullable=False
+    )
+
+
+    health_problem: Mapped[str] = mapped_column(
+        String(300),
+        default="No problem reported",
+        nullable=False
+    )
+
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
@@ -72,15 +109,18 @@ class User(Base):
     )
 
 
+
 class FitnessPlan(Base):
 
     __tablename__ = "fitness_plans"
+
 
     id: Mapped[int] = mapped_column(
         Integer,
         primary_key=True,
         index=True
     )
+
 
     user_id: Mapped[str] = mapped_column(
         String(80),
@@ -89,30 +129,36 @@ class FitnessPlan(Base):
         nullable=False
     )
 
+
     original_plan: Mapped[str] = mapped_column(
         Text,
         nullable=False
     )
+
 
     current_plan: Mapped[str] = mapped_column(
         Text,
         nullable=False
     )
 
+
     nutrition_tip: Mapped[str] = mapped_column(
         Text,
         nullable=False
     )
+
 
     feedback: Mapped[str | None] = mapped_column(
         Text,
         nullable=True
     )
 
+
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
         default=datetime.utcnow
     )
+
 
     updated_at: Mapped[datetime] = mapped_column(
         DateTime,
@@ -124,3 +170,4 @@ class FitnessPlan(Base):
     user: Mapped[User] = relationship(
         back_populates="plans"
     )
+
