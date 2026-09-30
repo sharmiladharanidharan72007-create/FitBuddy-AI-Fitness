@@ -5,8 +5,21 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: #f4f7fb;
     color: #1f2937;
+
+    background-image:
+        linear-gradient(
+            rgba(255, 255, 255, 0.72),
+            rgba(255, 255, 255, 0.72)
+        ),
+        url("https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=2000&q=80");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+    min-height: 100vh;
 }
 
 .hero-page {
@@ -21,10 +34,10 @@ body {
 }
 
 .card {
-    background: white;
+    background: rgba(255, 255, 255, 0.94);
     border-radius: 20px;
     padding: 30px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
 .form-card {
@@ -45,12 +58,10 @@ body {
 
 .tagline {
     color: #64748b;
-    margin-top: 5px;
 }
 
 h1 {
     font-size: 32px;
-    margin: 20px 0 10px;
 }
 
 h2 {
@@ -103,13 +114,11 @@ textarea:focus {
 
 .form-section-title {
     margin-top: 25px;
-    margin-bottom: 10px;
 }
 
 .small-note {
     font-size: 13px;
     color: #64748b;
-    line-height: 1.5;
 }
 
 .primary {
@@ -150,22 +159,14 @@ textarea:focus {
     margin-top: 25px;
 }
 
-
-/* USER PROFILE */
-
-.profile-box {
-    background: #4be6de;
+.profile-box,
+.nutrition-box,
+.feedback-box {
+    background: rgba(248, 250, 252, 0.95);
     border-radius: 15px;
     padding: 20px;
     margin-top: 25px;
 }
-
-.profile-box p {
-    margin: 8px 0;
-}
-
-
-/* AI PLAN */
 
 .plan-box {
     margin-top: 25px;
@@ -173,7 +174,7 @@ textarea:focus {
 
 .ai-plan {
     white-space: pre-wrap;
-    background: #dae78f;
+    background: rgba(248, 250, 252, 0.95);
     border: 1px solid #e2e8f0;
     border-radius: 15px;
     padding: 25px;
@@ -182,34 +183,6 @@ textarea:focus {
     overflow-x: auto;
 }
 
-
-/* NUTRITION TIP */
-
-.nutrition-box {
-    margin-top: 25px;
-    padding: 20px;
-    border-radius: 15px;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-}
-
-.nutrition-box p {
-    line-height: 1.7;
-}
-
-
-/* FEEDBACK */
-
-.feedback-box {
-    margin-top: 25px;
-    padding: 20px;
-    background: #f8fafc;
-    border-radius: 15px;
-}
-
-
-/* ERROR */
-
 .alert {
     padding: 15px;
     border-radius: 10px;
@@ -217,12 +190,9 @@ textarea:focus {
 }
 
 .alert.error {
-    background: rgb(233, 247, 246);
+    background: #fee2e2;
     color: #991b1b;
 }
-
-
-/* MOBILE */
 
 @media (max-width: 700px) {
 
@@ -251,4 +221,3 @@ textarea:focus {
         font-size: 14px;
     }
 }
-
