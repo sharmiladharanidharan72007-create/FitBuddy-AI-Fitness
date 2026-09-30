@@ -1,9 +1,14 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>FitBuddy - AI Fitness Assistant</title>
 
@@ -11,204 +16,375 @@
         rel="stylesheet"
         href="{{ url_for('static', path='style.css') }}"
     >
+
 </head>
+
 
 <body class="hero-page">
 
-<main class="container">
 
-<section class="card form-card">
-
-    <div class="brand">
-        💪 FitBuddy
-    </div>
-
-    <p class="tagline">
-        AI-powered personalized fitness planning
-    </p>
-
-    <h1>
-        Create Your 7-Day Plan
-    </h1>
-
-    <p class="muted">
-        Enter your details and let FitBuddy
-        prepare a personalized 7-day workout
-        and food plan.
-    </p>
-
-    {% if error %}
-    <div class="alert error">
-        {{ error }}
-    </div>
-    {% endif %}
-
-    <form action="/generate-workout" method="post">
-
-        <!-- BASIC USER DETAILS -->
-
-        <div class="grid two">
-
-            <label>
-                Name
-
-                <input
-                    type="text"
-                    name="username"
-                    placeholder="Your name"
-                    required
-                    maxlength="100"
-                >
-            </label>
+<div class="landing-container">
 
 
-            <label>
-                User ID
+    <!-- LEFT SIDE -->
 
-                <input
-                    type="text"
-                    name="user_id"
-                    placeholder="Example: FB001"
-                    required
-                    maxlength="80"
-                >
-            </label>
+    <section class="hero-content">
 
+        <div class="brand">
+            💪 FitBuddy
+        </div>
 
-            <label>
-                Age
+        <div class="badge">
+            🤖 AI-POWERED FITNESS ASSISTANT
+        </div>
 
-                <input
-                    type="number"
-                    name="age"
-                    min="13"
-                    max="100"
-                    required
-                >
-            </label>
+        <h1>
+            Your AI Fitness
+            <span>Journey Starts Here</span>
+        </h1>
 
+        <p class="hero-description">
 
-            <label>
-                Weight (kg)
+            Get a personalized <strong>7-day workout and food plan</strong>
+            created with AI based on your goals, fitness level,
+            and health information.
 
-                <input
-                    type="number"
-                    name="weight"
-                    min="20"
-                    max="400"
-                    step="0.1"
-                    required
-                >
-            </label>
+        </p>
 
 
-            <label>
-                Fitness Goal
+        <div class="feature-list">
 
-                <select name="goal" required>
-
-                    <option value="weight loss">
-                        Weight Loss
-                    </option>
-
-                    <option value="muscle gain">
-                        Muscle Gain
-                    </option>
-
-                    <option value="general wellness">
-                        General Wellness
-                    </option>
-
-                    <option value="flexibility">
-                        Flexibility
-                    </option>
-
-                </select>
-            </label>
+            <div class="feature">
+                <span>🏋️</span>
+                <div>
+                    <strong>Personalized Workouts</strong>
+                    <small>AI-generated exercises for your goal</small>
+                </div>
+            </div>
 
 
-            <label>
-                Workout Intensity
+            <div class="feature">
+                <span>🥗</span>
+                <div>
+                    <strong>Smart Food Plans</strong>
+                    <small>7 days of practical food suggestions</small>
+                </div>
+            </div>
 
-                <select name="intensity" required>
 
-                    <option value="low">
-                        Low
-                    </option>
-
-                    <option value="medium" selected>
-                        Medium
-                    </option>
-
-                    <option value="high">
-                        High
-                    </option>
-
-                </select>
-            </label>
+            <div class="feature">
+                <span>❤️</span>
+                <div>
+                    <strong>Health-Aware Planning</strong>
+                    <small>Your health information is considered</small>
+                </div>
+            </div>
 
         </div>
 
 
-        <!-- HEALTH INFORMATION -->
+        <div class="hero-stats">
 
-        <h2 class="form-section-title">
-            ❤️ Health Information
-        </h2>
+            <div>
+                <strong>7</strong>
+                <span>Days</span>
+            </div>
 
-        <label>
-            Any disease or problem in your body?
+            <div>
+                <strong>AI</strong>
+                <span>Powered</span>
+            </div>
 
-            <input
-                type="text"
-                name="health_problem"
-                placeholder="Example: No problem / Knee pain"
-                maxlength="300"
+            <div>
+                <strong>24/7</strong>
+                <span>Fitness Buddy</span>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- RIGHT SIDE FORM -->
+
+    <section class="form-card">
+
+
+        <div class="form-header">
+
+            <div class="form-icon">
+                ✨
+            </div>
+
+            <div>
+
+                <h2>
+                    Create Your Plan
+                </h2>
+
+                <p>
+                    Enter your details below
+                </p>
+
+            </div>
+
+        </div>
+
+
+        {% if error %}
+
+        <div class="alert error">
+            {{ error }}
+        </div>
+
+        {% endif %}
+
+
+        <form
+            action="/generate-workout"
+            method="post"
+        >
+
+
+            <div class="form-grid">
+
+
+                <label>
+
+                    <span>
+                        👤 Name
+                    </span>
+
+                    <input
+                        type="text"
+                        name="username"
+                        placeholder="Enter your name"
+                        required
+                        maxlength="100"
+                    >
+
+                </label>
+
+
+                <label>
+
+                    <span>
+                        🆔 User ID
+                    </span>
+
+                    <input
+                        type="text"
+                        name="user_id"
+                        placeholder="Example: FB001"
+                        required
+                        maxlength="80"
+                    >
+
+                </label>
+
+
+                <label>
+
+                    <span>
+                        🎂 Age
+                    </span>
+
+                    <input
+                        type="number"
+                        name="age"
+                        placeholder="Your age"
+                        min="13"
+                        max="100"
+                        required
+                    >
+
+                </label>
+
+
+                <label>
+
+                    <span>
+                        ⚖️ Weight (kg)
+                    </span>
+
+                    <input
+                        type="number"
+                        name="weight"
+                        placeholder="Your weight"
+                        min="20"
+                        max="400"
+                        step="0.1"
+                        required
+                    >
+
+                </label>
+
+
+                <label>
+
+                    <span>
+                        🎯 Fitness Goal
+                    </span>
+
+                    <select
+                        name="goal"
+                        required
+                    >
+
+                        <option value="weight loss">
+                            Weight Loss
+                        </option>
+
+                        <option value="muscle gain">
+                            Muscle Gain
+                        </option>
+
+                        <option value="general wellness">
+                            General Wellness
+                        </option>
+
+                        <option value="flexibility">
+                            Flexibility
+                        </option>
+
+                    </select>
+
+                </label>
+
+
+                <label>
+
+                    <span>
+                        🔥 Workout Intensity
+                    </span>
+
+                    <select
+                        name="intensity"
+                        required
+                    >
+
+                        <option value="low">
+                            Low
+                        </option>
+
+                        <option
+                            value="medium"
+                            selected
+                        >
+                            Medium
+                        </option>
+
+                        <option value="high">
+                            High
+                        </option>
+
+                    </select>
+
+                </label>
+
+
+            </div>
+
+
+            <!-- HEALTH -->
+
+            <div class="health-section">
+
+                <div class="health-heading">
+
+                    ❤️
+
+                    <div>
+
+                        <strong>
+                            Health Information
+                        </strong>
+
+                        <small>
+                            Optional
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <label>
+
+                    <span>
+                        Any health problem or physical limitation?
+                    </span>
+
+                    <input
+                        type="text"
+                        name="health_problem"
+                        placeholder="Example: No problem / Knee pain"
+                        maxlength="300"
+                    >
+
+                </label>
+
+
+                <p class="health-note">
+
+                    💡 This helps FitBuddy create a more
+                    appropriate general wellness plan.
+
+                </p>
+
+            </div>
+
+
+            <!-- BUTTON -->
+
+            <button
+                type="submit"
+                class="generate-button"
             >
-        </label>
 
-        <p class="small-note">
-            Optional. This information helps FitBuddy make the
-            general wellness plan more appropriate.
+                <span>
+                    ✨
+                </span>
+
+                Generate My 7-Day Plan
+
+                <span>
+                    →
+                </span>
+
+            </button>
+
+
+        </form>
+
+
+        <div class="form-links">
+
+            <a href="/view-all-users">
+                👥 Admin Dashboard
+            </a>
+
+            <a href="/docs">
+                📚 API Docs
+            </a>
+
+        </div>
+
+
+        <p class="disclaimer">
+
+            FitBuddy provides general wellness guidance
+            and is not medical advice.
+
         </p>
 
 
-        <!-- GENERATE BUTTON -->
-
-        <button
-            class="primary"
-            type="submit"
-        >
-            ✨ Generate My 7-Day Plan
-        </button>
-
-    </form>
+    </section>
 
 
-    <!-- LINKS -->
+</div>
 
-    <div class="links">
-
-        <a href="/view-all-users">
-            Admin Dashboard
-        </a>
-
-        <a href="/docs">
-            API Docs
-        </a>
-
-    </div>
-
-
-    <p class="disclaimer">
-        FitBuddy provides general wellness guidance
-        and is not medical advice.
-    </p>
-
-</section>
-
-</main>
 
 </body>
-</html>
 
+</html>

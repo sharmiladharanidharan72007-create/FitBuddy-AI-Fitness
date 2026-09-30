@@ -2,59 +2,290 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <title>FitBuddy - Your Plan</title>
+    <title>FitBuddy - Your Fitness Plan</title>
 
     <link
         rel="stylesheet"
         href="{{ url_for('static', path='style.css') }}"
     >
+
 </head>
+
 
 <body>
 
-<div class="container">
 
-    <div class="card">
+<div class="container result-container">
 
-        <h1>💪 FitBuddy</h1>
 
-        <h2>Your 7-Day Fitness Plan</h2>
+    <!-- HEADER -->
 
-        <p>
-            <strong>Name:</strong> {{ username }}
-        </p>
+    <div class="result-header">
 
-        <p>
-            <strong>Goal:</strong> {{ goal }}
-        </p>
-
-        <p>
-            <strong>Weight:</strong> {{ weight }} kg
-        </p>
-
-        <hr>
-
-        <h2>🏋️🥗 Workout & Food Plan</h2>
-
-        <div class="ai-plan">
-            {{ workout_plan }}
+        <div class="brand">
+            💪 FitBuddy
         </div>
 
-        <hr>
+        <h1>
+            Your Personalized Fitness Plan
+        </h1>
 
-        <h2>💧 Nutrition & Recovery Tip</h2>
+        <p>
+            AI-powered plan created for you 🤖✨
+        </p>
+
+    </div>
+
+
+    <!-- FEEDBACK SUCCESS MESSAGE -->
+
+    {% if updated %}
+
+    <div class="success-message">
+
+        <div class="success-icon">
+            ✅
+        </div>
+
+        <div>
+
+            <h2>
+                Plan Updated Successfully!
+            </h2>
+
+            <p>
+                Your feedback has been received and
+                your fitness plan has been updated
+                based on your feedback.
+            </p>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- USER PROFILE -->
+
+    <section class="profile-section">
+
+        <h2>
+            👤 Your Profile
+        </h2>
+
+        <div class="profile-grid">
+
+
+            <div class="profile-card">
+
+                <span class="profile-icon">
+                    👤
+                </span>
+
+                <span class="profile-label">
+                    Name
+                </span>
+
+                <strong>
+                    {{ username }}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-card">
+
+                <span class="profile-icon">
+                    🆔
+                </span>
+
+                <span class="profile-label">
+                    User ID
+                </span>
+
+                <strong>
+                    {{ user_id }}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-card">
+
+                <span class="profile-icon">
+                    🎂
+                </span>
+
+                <span class="profile-label">
+                    Age
+                </span>
+
+                <strong>
+                    {{ age }}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-card">
+
+                <span class="profile-icon">
+                    ⚖️
+                </span>
+
+                <span class="profile-label">
+                    Weight
+                </span>
+
+                <strong>
+                    {{ weight }} kg
+                </strong>
+
+            </div>
+
+
+            <div class="profile-card">
+
+                <span class="profile-icon">
+                    🎯
+                </span>
+
+                <span class="profile-label">
+                    Goal
+                </span>
+
+                <strong>
+                    {{ goal }}
+                </strong>
+
+            </div>
+
+
+            <div class="profile-card">
+
+                <span class="profile-icon">
+                    🔥
+                </span>
+
+                <span class="profile-label">
+                    Intensity
+                </span>
+
+                <strong>
+                    {{ intensity }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- HEALTH INFORMATION -->
+
+    <section class="health-card">
+
+        <h2>
+            ❤️ Health Consideration
+        </h2>
+
+        <p>
+
+            <strong>
+                Reported problem:
+            </strong>
+
+            {{ health_problem }}
+
+        </p>
+
+        <p class="health-note">
+
+            FitBuddy considers the reported health
+            information when creating the workout.
+            This is general wellness guidance and
+            not medical advice.
+
+        </p>
+
+    </section>
+
+
+    <!-- AI PLAN -->
+
+    <section class="plan-section">
+
+        <div class="section-title">
+
+            <span>
+                🏋️
+            </span>
+
+            <h2>
+                Your 7-Day Workout & Food Plan
+            </h2>
+
+        </div>
+
+
+        <div class="ai-plan">
+
+            {{ workout_plan }}
+
+        </div>
+
+    </section>
+
+
+    <!-- NUTRITION TIP -->
+
+    <section class="nutrition-card">
+
+        <h2>
+            💧 Nutrition & Recovery Tip
+        </h2>
 
         <p>
             {{ nutrition_tip }}
         </p>
 
-        <hr>
+    </section>
 
-        <h2>🔄 Give Feedback</h2>
+
+    <!-- FEEDBACK -->
+
+    <section class="feedback-card">
+
+        <div class="feedback-title">
+
+            <span>
+                🔄
+            </span>
+
+            <div>
+
+                <h2>
+                    Improve Your Plan
+                </h2>
+
+                <p>
+                    Tell FitBuddy what you want to change.
+                </p>
+
+            </div>
+
+        </div>
+
 
         <form
             action="/submit-feedback"
@@ -67,31 +298,55 @@
                 value="{{ user_id }}"
             >
 
+
             <textarea
                 name="feedback"
                 rows="5"
-                placeholder="Enter your feedback"
+                placeholder="Example: The workout is too difficult. Please make it easier."
                 required
             ></textarea>
 
+
             <button
-                class="primary"
                 type="submit"
+                class="update-button"
             >
-                Update My Plan
+
+                🔄 Update My Plan
+
             </button>
 
         </form>
 
-        <br>
+    </section>
+
+
+    <!-- NEW PLAN -->
+
+    <div class="bottom-links">
 
         <a href="/">
-            ← Create New Plan
+            ➕ Create New Plan
+        </a>
+
+        <a href="/view-all-users">
+            👥 Admin Dashboard
         </a>
 
     </div>
 
+
+    <p class="disclaimer">
+
+        FitBuddy provides general wellness guidance
+        and is not medical advice.
+
+    </p>
+
+
 </div>
 
+
 </body>
+
 </html>
