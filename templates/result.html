@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>FitBuddy - Your 7-Day Plan</title>
+    <title>FitBuddy - Your Plan</title>
 
     <link
         rel="stylesheet"
@@ -16,6 +14,84 @@
     >
 </head>
 
-<body class="hero-page">
+<body>
 
-<main class="container">
+<div class="container">
+
+    <div class="card">
+
+        <h1>💪 FitBuddy</h1>
+
+        <h2>Your 7-Day Fitness Plan</h2>
+
+        <p>
+            <strong>Name:</strong> {{ username }}
+        </p>
+
+        <p>
+            <strong>Goal:</strong> {{ goal }}
+        </p>
+
+        <p>
+            <strong>Weight:</strong> {{ weight }} kg
+        </p>
+
+        <hr>
+
+        <h2>🏋️🥗 Workout & Food Plan</h2>
+
+        <div class="ai-plan">
+            {{ workout_plan }}
+        </div>
+
+        <hr>
+
+        <h2>💧 Nutrition & Recovery Tip</h2>
+
+        <p>
+            {{ nutrition_tip }}
+        </p>
+
+        <hr>
+
+        <h2>🔄 Give Feedback</h2>
+
+        <form
+            action="/submit-feedback"
+            method="post"
+        >
+
+            <input
+                type="hidden"
+                name="user_id"
+                value="{{ user_id }}"
+            >
+
+            <textarea
+                name="feedback"
+                rows="5"
+                placeholder="Enter your feedback"
+                required
+            ></textarea>
+
+            <button
+                class="primary"
+                type="submit"
+            >
+                Update My Plan
+            </button>
+
+        </form>
+
+        <br>
+
+        <a href="/">
+            ← Create New Plan
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>
