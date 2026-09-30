@@ -23,13 +23,11 @@ class User(Base):
 
     __tablename__ = "users"
 
-
     id: Mapped[int] = mapped_column(
         Integer,
         primary_key=True,
         index=True
     )
-
 
     user_id: Mapped[str] = mapped_column(
         String(80),
@@ -38,54 +36,30 @@ class User(Base):
         nullable=False
     )
 
-
     username: Mapped[str] = mapped_column(
         String(100),
         nullable=False
     )
-
 
     age: Mapped[int] = mapped_column(
         Integer,
         nullable=False
     )
 
-
     weight: Mapped[float] = mapped_column(
         Float,
         nullable=False
     )
-
 
     goal: Mapped[str] = mapped_column(
         String(50),
         nullable=False
     )
 
-
     intensity: Mapped[str] = mapped_column(
         String(20),
         nullable=False
     )
-
-intensity: Mapped[str] = mapped_column(
-    String(20),
-    nullable=False
-)
-
-
-health_problem: Mapped[str] = mapped_column(
-    String(300),
-    default="No problem reported",
-    nullable=False
-)
-    
-
-
-
-
-    
-
 
     health_problem: Mapped[str] = mapped_column(
         String(300),
@@ -93,12 +67,10 @@ health_problem: Mapped[str] = mapped_column(
         nullable=False
     )
 
-
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
         default=datetime.utcnow
     )
-
 
     plans: Mapped[list["FitnessPlan"]] = relationship(
         back_populates="user",
@@ -106,18 +78,15 @@ health_problem: Mapped[str] = mapped_column(
     )
 
 
-
 class FitnessPlan(Base):
 
     __tablename__ = "fitness_plans"
-
 
     id: Mapped[int] = mapped_column(
         Integer,
         primary_key=True,
         index=True
     )
-
 
     user_id: Mapped[str] = mapped_column(
         String(80),
@@ -126,43 +95,36 @@ class FitnessPlan(Base):
         nullable=False
     )
 
-
     original_plan: Mapped[str] = mapped_column(
         Text,
         nullable=False
     )
-
 
     current_plan: Mapped[str] = mapped_column(
         Text,
         nullable=False
     )
 
-
     nutrition_tip: Mapped[str] = mapped_column(
         Text,
         nullable=False
     )
-
 
     feedback: Mapped[str | None] = mapped_column(
         Text,
         nullable=True
     )
 
-
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
         default=datetime.utcnow
     )
-
 
     updated_at: Mapped[datetime] = mapped_column(
         DateTime,
         default=datetime.utcnow,
         onupdate=datetime.utcnow
     )
-
 
     user: Mapped[User] = relationship(
         back_populates="plans"

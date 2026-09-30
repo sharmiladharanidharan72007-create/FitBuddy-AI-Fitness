@@ -33,17 +33,15 @@
 
     <p class="muted">
         Enter your details and let FitBuddy
-        prepare a personalized workout plan
-        and nutrition tip.
+        prepare a personalized 7-day workout
+        and food plan.
     </p>
-
 
     {% if error %}
     <div class="alert error">
         {{ error }}
     </div>
     {% endif %}
-
 
     <form action="/generate-workout" method="post">
 
@@ -152,58 +150,7 @@
         </div>
 
 
-        <!-- NUTRITION DETAILS -->
-
-        <h2 class="form-section-title">
-            🥗 Nutrition Details
-        </h2>
-
-        <p class="muted">
-            Enter a short description of what you usually eat.
-        </p>
-
-
-        <div class="grid two">
-
-            <label>
-                🌅 Morning Nutrition
-
-                <input
-                    type="text"
-                    name="morning_nutrition"
-                    placeholder="Example: Idli + egg"
-                    maxlength="200"
-                >
-            </label>
-
-
-            <label>
-                ☀️ Afternoon Nutrition
-
-                <input
-                    type="text"
-                    name="afternoon_nutrition"
-                    placeholder="Example: Rice + vegetables"
-                    maxlength="200"
-                >
-            </label>
-
-
-            <label>
-                🌙 Evening Nutrition
-
-                <input
-                    type="text"
-                    name="evening_nutrition"
-                    placeholder="Example: Chapati + vegetables"
-                    maxlength="200"
-                >
-            </label>
-
-        </div>
-
-
-        <!-- BODY PROBLEM -->
+        <!-- HEALTH INFORMATION -->
 
         <h2 class="form-section-title">
             ❤️ Health Information
@@ -221,19 +168,18 @@
         </label>
 
         <p class="small-note">
-            Optional. This information is used only to make the
-            generated plan more appropriate. FitBuddy does not
-            diagnose or treat medical conditions.
+            Optional. This information helps FitBuddy make the
+            general wellness plan more appropriate.
         </p>
 
 
-        <!-- SUBMIT -->
+        <!-- GENERATE BUTTON -->
 
         <button
             class="primary"
             type="submit"
         >
-            ✨ Generate My Plan
+            ✨ Generate My 7-Day Plan
         </button>
 
     </form>
@@ -255,8 +201,8 @@
 
 
     <p class="disclaimer">
-        FitBuddy provides general wellness
-        guidance and is not medical advice.
+        FitBuddy provides general wellness guidance
+        and is not medical advice.
     </p>
 
 </section>
