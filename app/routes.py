@@ -1,599 +1,245 @@
-from pathlib import Path
-
-from fastapi import (
-    APIRouter,
-    Depends,
-    Form,
-    Request
-)
-
-from fastapi.responses import (
-    HTMLResponse,
-    JSONResponse
-)
-
+from fastapi import APIRouter, Depends, Form, Request
+from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-
 from sqlalchemy.orm import Session
-
 
 from .database import (
     get_db,
-    get_all_users,
-    get_latest_plan,
     get_user,
-    save_plan,
+    get_all_users,
     save_user,
-    update_plan
+    save_plan,
+    get_latest_plan,
+    update_plan,
 )
-
-from .gemini_flash_generator import (
-    generate_nutrition_tip_with_flash
-)
-
-from .gemini_generator import (
-    generate_workout_gemini
-)
-
 from .models import User
-
-from .schemas import (
-    FeedbackRequest,
-    UserInput
-)
-
-from .updated_plan import (
-    update_workout_plan
-)
-
-
-BASE_DIR = Path(
-    __file__
-).resolve().parent.parent
-
-
-templates = Jinja2Templates(
-    directory=str(
-        BASE_DIR / "templates"
-    )
-)
+from .schemas import UserInput, FeedbackRequest
+from .gemini_generator import generate_workout_gemini
+from .gemini_flash_generator import generate_nutrition_tip_with_flash
+from .updated_plan import update_workout_plan
 
 
 router = APIRouter()
 
-
-def render_error(
-    request,
-    message
-):
-
-    return templates.TemplateResponse(
-        request=request,
-        name="index.html",
-        context={
-            "error": message
-        },
-        status_code=400
-    )
+templates = Jinja2Templates(directory="templates")
 
 
-# =========================================================
-# HOME PAGE
-# =========================================================
-
-@router.get(
-    "/",
-    response_class=HTMLResponse
-)
+@router.get("/", response_class=HTMLResponse)
 def home(request: Request):
-
     return templates.TemplateResponse(
-        request=request,
-        name="index.html",
-        context={}
+        "index.html",
+        {
+            "request": request
+        }
     )
 
 
-# =========================================================
-# GENERATE WORKOUT
-# =========================================================
-
-@router.post(
-    "/generate-workout",
-    response_class=HTMLResponse
-)
+@router.post("/generate-workout", response_class=HTMLResponse)
 def generate_workout(
-
     request: Request,
-
     username: str = Form(...),
-
     user_id: str = Form(...),
-
     age: int = Form(...),
-
     weight: float = Form(...),
-
     goal: str = Form(...),
-
     intensity: str = Form(...),
-
+    health_problem: str = Form(""),
     db: Session = Depends(get_db)
 ):
 
-
-    # Validate input
-
     try:
 
-        data = UserInput(
-
+        user_input = UserInput(
             username=username,
-
             user_id=user_id,
-
             age=age,
-
             weight=weight,
-
             goal=goal,
-
-            intensity=intensity
+            intensity=intensity,
+            health_problem=health_problem
         )
 
+    except Exception as e:
 
-    except Exception as error:
-
-        return render_error(
-            request,
-            f"Please check your input: {error}"
+        return templates.TemplateResponse(
+            "index.html",
+            {
+                "request": request,
+                "error": str(e)
+            }
         )
 
-
-    # Check if user already exists
-
-    user = get_user(
-        db,
-        data.user_id
-    )
-
+    user = get_user(db, user_input.user_id)
 
     if user:
 
-        user.username = data.username
-
-        user.age = data.age
-
-        user.weight = data.weight
-
-        user.goal = data.goal
-
-        user.intensity = data.intensity
+        user.username = user_input.username
+        user.age = user_input.age
+        user.weight = user_input.weight
+        user.goal = user_input.goal
+        user.intensity = user_input.intensity
+        user.health_problem = user_input.health_problem
 
         db.commit()
-
         db.refresh(user)
-
 
     else:
 
         user = User(
-
-            username=data.username,
-
-            user_id=data.user_id,
-
-            age=data.age,
-
-            weight=data.weight,
-
-            goal=data.goal,
-
-            intensity=data.intensity
-
+            username=user_input.username,
+            user_id=user_input.user_id,
+            age=user_input.age,
+            weight=user_input.weight,
+            goal=user_input.goal,
+            intensity=user_input.intensity,
+            health_problem=user_input.health_problem
         )
 
-        save_user(
-            db,
-            user
-        )
+        save_user(db, user)
 
+    workout_plan = generate_workout_gemini(
+        user_input.username,
+        user_input.age,
+        user_input.weight,
+        user_input.goal,
+        user_input.intensity,
+        user_input.health_problem
+    )
 
-    # Generate workout
+    nutrition_tip = generate_nutrition_tip_with_flash(
+        user_input.goal
+    )
 
-    try:
-
-        workout_plan = generate_workout_gemini(
-
-            data.username,
-
-            data.age,
-
-            data.weight,
-
-            data.goal,
-
-            data.intensity
-
-        )
-
-
-        nutrition_tip = (
-            generate_nutrition_tip_with_flash(
-                data.goal
-            )
-        )
-
-
-    except Exception as error:
-
-        return render_error(
-            request,
-            f"AI generation failed: {error}"
-        )
-
-
-    # Save plan
-
-    plan = save_plan(
-
+    save_plan(
         db,
-
-        data.user_id,
-
+        user_input.user_id,
         workout_plan,
-
         nutrition_tip
-
     )
-
-
-    # Show result page
 
     return templates.TemplateResponse(
-
-        request=request,
-
-        name="result.html",
-
-        context={
-
-            "user": user,
-
-            "plan": plan,
-
-            "workout_plan":
-                plan.current_plan,
-
-            "nutrition_tip":
-                plan.nutrition_tip,
-
-            "message": None
-
-        }
-
-    )
-
-
-# =========================================================
-# SUBMIT FEEDBACK
-# =========================================================
-
-@router.post(
-    "/submit-feedback",
-    response_class=HTMLResponse
-)
-def submit_feedback(
-
-    request: Request,
-
-    user_id: str = Form(...),
-
-    feedback: str = Form(...),
-
-    db: Session = Depends(get_db)
-
-):
-
-
-    # Validate feedback
-
-    try:
-
-        data = FeedbackRequest(
-
-            user_id=user_id,
-
-            feedback=feedback
-
-        )
-
-
-    except Exception as error:
-
-        return render_error(
-
-            request,
-
-            f"Please check your feedback: {error}"
-
-        )
-
-
-    # Get user
-
-    user = get_user(
-
-        db,
-
-        data.user_id
-
-    )
-
-
-    # Get plan
-
-    plan = get_latest_plan(
-
-        db,
-
-        data.user_id
-
-    )
-
-
-    if not user or not plan:
-
-        return render_error(
-
-            request,
-
-            "User or workout plan was not found."
-
-        )
-
-
-    # Update plan
-
-    try:
-
-        revised_plan = update_workout_plan(
-
-            user.username,
-
-            user.age,
-
-            user.weight,
-
-            user.goal,
-
-            user.intensity,
-
-            plan.current_plan,
-
-            data.feedback
-
-        )
-
-
-        updated_plan = update_plan(
-
-            db,
-
-            plan,
-
-            revised_plan,
-
-            data.feedback
-
-        )
-
-
-    except Exception as error:
-
-        return render_error(
-
-            request,
-
-            f"Plan update failed: {error}"
-
-        )
-
-
-    return templates.TemplateResponse(
-
-        request=request,
-
-        name="result.html",
-
-        context={
-
-            "user": user,
-
-            "plan": updated_plan,
-
-            "workout_plan":
-                updated_plan.current_plan,
-
-            "nutrition_tip":
-                updated_plan.nutrition_tip,
-
-            "message":
-                "Your plan has been updated using your feedback."
-
-        }
-
-    )
-
-
-# =========================================================
-# ADMIN DASHBOARD
-# =========================================================
-
-@router.get(
-    "/view-all-users",
-    response_class=HTMLResponse
-)
-def view_all_users(
-
-    request: Request,
-
-    db: Session = Depends(get_db)
-
-):
-
-    users = get_all_users(db)
-
-
-    return templates.TemplateResponse(
-
-        request=request,
-
-        name="all_users.html",
-
-        context={
-
-            "users": users
-
-        }
-
-    )
-
-
-# =========================================================
-# API - ALL USERS
-# =========================================================
-
-@router.get(
-    "/api/users"
-)
-def api_users(
-
-    db: Session = Depends(get_db)
-
-):
-
-    users = get_all_users(db)
-
-
-    return [
-
+        "result.html",
         {
-
-            "id": user.id,
-
-            "user_id": user.user_id,
-
-            "username": user.username,
-
-            "age": user.age,
-
-            "weight": user.weight,
-
-            "goal": user.goal,
-
-            "intensity": user.intensity,
-
-            "created_at":
-                user.created_at.isoformat()
-                if user.created_at
-                else None
-
+            "request": request,
+            "username": user_input.username,
+            "user_id": user_input.user_id,
+            "age": user_input.age,
+            "weight": user_input.weight,
+            "goal": user_input.goal,
+            "intensity": user_input.intensity,
+            "health_problem": user_input.health_problem,
+            "workout_plan": workout_plan,
+            "nutrition_tip": nutrition_tip
         }
-
-        for user in users
-
-    ]
+    )
 
 
-# =========================================================
-# API - ONE USER
-# =========================================================
-
-@router.get(
-    "/api/users/{user_id}"
-)
-def api_user(
-
-    user_id: str,
-
+@router.post("/submit-feedback", response_class=HTMLResponse)
+def submit_feedback(
+    request: Request,
+    user_id: str = Form(...),
+    feedback: str = Form(...),
     db: Session = Depends(get_db)
-
 ):
 
-    user = get_user(
-
-        db,
-
-        user_id
-
-    )
-
-
-    plan = get_latest_plan(
-
-        db,
-
-        user_id
-
-    )
-
+    user = get_user(db, user_id)
 
     if not user:
 
-        return JSONResponse(
-
+        return templates.TemplateResponse(
+            "index.html",
             {
-                "detail":
-                    "User not found"
-            },
-
-            status_code=404
-
+                "request": request,
+                "error": "User not found."
+            }
         )
 
+    plan = get_latest_plan(db, user_id)
 
-    return {
+    if not plan:
 
-        "user": {
-
-            "id": user.id,
-
-            "user_id": user.user_id,
-
-            "username": user.username,
-
-            "age": user.age,
-
-            "weight": user.weight,
-
-            "goal": user.goal,
-
-            "intensity": user.intensity
-
-        },
-
-
-        "plan":
-
-            None
-
-            if not plan
-
-            else {
-
-                "original_plan":
-                    plan.original_plan,
-
-                "current_plan":
-                    plan.current_plan,
-
-                "nutrition_tip":
-                    plan.nutrition_tip,
-
-                "feedback":
-                    plan.feedback
-
+        return templates.TemplateResponse(
+            "index.html",
+            {
+                "request": request,
+                "error": "No fitness plan found."
             }
+        )
 
-    }
+    feedback_data = FeedbackRequest(
+        user_id=user_id,
+        feedback=feedback
+    )
+
+    updated_plan = update_workout_plan(
+        user.username,
+        user.age,
+        user.weight,
+        user.goal,
+        user.intensity,
+        plan.current_plan,
+        feedback_data.feedback
+    )
+
+    update_plan(
+        db,
+        plan,
+        updated_plan,
+        feedback_data.feedback
+    )
+
+    return templates.TemplateResponse(
+        "result.html",
+        {
+            "request": request,
+            "username": user.username,
+            "user_id": user.user_id,
+            "age": user.age,
+            "weight": user.weight,
+            "goal": user.goal,
+            "intensity": user.intensity,
+            "health_problem": user.health_problem,
+            "workout_plan": updated_plan,
+            "nutrition_tip": plan.nutrition_tip
+        }
+    )
+
+
+@router.get("/view-all-users", response_class=HTMLResponse)
+def view_all_users(
+    request: Request,
+    db: Session = Depends(get_db)
+):
+
+    users = get_all_users(db)
+
+    return templates.TemplateResponse(
+        "all_users.html",
+        {
+            "request": request,
+            "users": users
+        }
+    )
+
+
+@router.get("/api/users")
+def api_users(
+    db: Session = Depends(get_db)
+):
+
+    users = get_all_users(db)
+
+    return [
+        {
+            "user_id": user.user_id,
+            "username": user.username,
+            "age": user.age,
+            "weight": user.weight,
+            "goal": user.goal,
+            "intensity": user.intensity,
+            "health_problem": user.health_problem,
+            "created_at": user.created_at
+        }
+        for user in users
+    ]
+

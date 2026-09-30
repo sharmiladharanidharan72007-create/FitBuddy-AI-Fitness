@@ -6,102 +6,48 @@ from google import genai
 
 load_dotenv()
 
+API_KEY = os.getenv("GOOGLE_API_KEY")
 
-def fallback_tip(goal):
+client = None
 
-    tips = {
-
-        "weight loss":
-        "Build meals around vegetables, a protein source, whole-food carbohydrates, and water. Focus on sustainable habits instead of extreme restriction.",
-
-        "muscle gain":
-        "Include a protein source in regular meals and snacks, along with enough overall food and fluids to support training and recovery.",
-
-        "general wellness":
-        "Choose varied foods, drink enough water, and maintain regular meals that support your daily activity and recovery.",
-
-        "flexibility":
-        "Stay hydrated and include balanced meals with protein and fruits or vegetables. Adequate sleep and recovery also support consistent training."
-
-    }
-
-    return tips.get(
-        goal,
-        tips["general wellness"]
-    )
+if API_KEY:
+    client = genai.Client(api_key=API_KEY)
 
 
 def generate_nutrition_tip_with_flash(goal):
 
+    fallback_tip = (
+        "Drink enough water throughout the day and include vegetables, "
+        "fruits, whole grains, and protein-rich foods in your meals. "
+        "Choose food portions according to your personal needs and activity level."
+    )
+
+    if not client:
+        return fallback_tip
+
     prompt = f"""
-Give one concise and practical
-nutrition or recovery tip.
+Give one short general nutrition and recovery tip for a person
+whose fitness goal is: {goal}.
 
-Fitness goal:
-{goal}
+Keep it to 2-4 simple sentences.
 
-Requirements:
-
-- 2 to 4 sentences.
-- Simple English.
-- Practical.
-- General wellness advice.
-- Do not provide medical treatment.
+Do not diagnose or treat any medical condition.
+Do not create a 7-day food plan because the main Gemini model
+already creates the 7-day food plan.
 """
-
-
-    api_key = os.getenv(
-        "GOOGLE_API_KEY",
-        ""
-    ).strip()
-
-
-    if not api_key:
-
-        return fallback_tip(goal)
-
 
     try:
 
-        client = genai.Client(
-            api_key=api_key
-        )
-
-
-        model = os.getenv(
-            "GEMINI_TIP_MODEL",
-            "gemini-2.5-flash"
-        )
-
-
         response = client.models.generate_content(
-            model=model,
+            model="gemini-2.5-flash",
             contents=prompt
         )
 
+        if response and response.text:
+            return response.text.strip()
 
-        generated_text = getattr(
-            response,
-            "text",
-            None
-        )
+    except Exception as e:
 
+        print("Gemini Flash error:", e)
 
-        if generated_text:
-
-            return generated_text.strip()
-
-
-    except Exception:
-
-        if os.getenv(
-            "ALLOW_FALLBACK",
-            "true"
-        ).lower() == "true":
-
-            return fallback_tip(goal)
-
-        raise
-
-
-    return fallback_tip(goal)
+    return fallback_tip
