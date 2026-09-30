@@ -444,10 +444,6 @@ summary {
     .day-number {
         width: 42px;
         height: 42px;
-        font-size: 17px;
+        font-size: 17PX;
     }
-}
-
-body{
-    background:red !important;
 }
