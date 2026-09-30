@@ -68,26 +68,23 @@ class User(Base):
         nullable=False
     )
 
-
-    morning_nutrition: Mapped[str] = mapped_column(
-        String(200),
-        default="Not provided",
-        nullable=False
-    )
+intensity: Mapped[str] = mapped_column(
+    String(20),
+    nullable=False
+)
 
 
-    afternoon_nutrition: Mapped[str] = mapped_column(
-        String(200),
-        default="Not provided",
-        nullable=False
-    )
+health_problem: Mapped[str] = mapped_column(
+    String(300),
+    default="No problem reported",
+    nullable=False
+)
+    
 
 
-    evening_nutrition: Mapped[str] = mapped_column(
-        String(200),
-        default="Not provided",
-        nullable=False
-    )
+
+
+    
 
 
     health_problem: Mapped[str] = mapped_column(
